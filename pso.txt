@@ -1,0 +1,31 @@
+# Step1: Randomly initialize Swarm population of N particles Xi ( i=1, 2, …, n)
+# Step2: Select hyperparameter values
+#            w, c1 and c2
+# Step 3: For Iter in range(max_iter):  # loop max_iter times  
+#             For i in range(N):  # for each particle:
+#                a. Compute new velocity of ith particle
+#                     swarm[i].velocity = 
+#                          w*swarm[i].velocity + 
+#                          r1*c1*(swarm[i].bestPos - swarm[i].position) +
+#                          r2*c2*( best_pos_swarm - swarm[i].position) 
+#                b. If velocity is not in range [minx, max] then clip it
+#                     if swarm[i].velocity < minx:
+#                         swarm[i].velocity = minx
+#                     elif swarm[i].velocity[k] > maxx:
+#                         swarm[i].velocity[k] = maxx
+#                c. Compute new position of ith particle using its new velocity
+#                     swarm[i].position += swarm[i].velocity
+#                d. Update new best of this particle and new best of Swarm
+#                      if swarm[i].fitness < swarm[i].bestFitness:
+#                         swarm[i].bestFitness = swarm[i].fitness
+#                         swarm[i].bestPos = swarm[i].position
+
+#                      if swarm[i].fitness < best_fitness_swarm
+#                         best_fitness_swarm = swarm[i].fitness
+#                         best_pos_swarm = swarm[i].position
+#              End-for
+#          End -for
+# Step 4: Return best particle of Swarm
+
+
+
