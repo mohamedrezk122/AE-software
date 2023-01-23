@@ -1,0 +1,20 @@
+\documentclass[a4paper]{report}
+\usepackage{pkgs}
+\usepackage{pdfpages}
+
+\usepackage[toc,page]{appendix}
+\begin{document}
+\includepdf[pages=-]{cover}
+\tableofcontents
+\input{Introduction}
+\input{material}
+\input{Localization}
+\part{Optimization}
+\input{PSO}
+\input{simplex}
+\input{results}
+\input{conclusion and Recomendations}
+\input{references}
+\input{appendix}
+
+\end{document}

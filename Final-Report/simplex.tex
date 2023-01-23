@@ -1,0 +1,212 @@
+
+\large
+
+\chapter*{Simplex Optimization}
+\addcontentsline{toc}{chapter}{Simplex Optimization}
+
+\section{Inroduction}
+The simplex Nelder-Mead algorithm (Amoeba search) is widely used to
+solve unconstrained function minimization problems even the
+discontinuous ones or subject to noise. The algorithm is an iterative
+process, meaning, it tries to replace the worst solution with a better
+one and reorder the simplex nodes. Each iteration, the search area is
+moving and deformed based on some rules. To understand the structure of
+the algorithm more closely, we begin with introducing some helpful
+stuff. Our main goal is :
+{\[\min\limits_{\overset{\rightarrow}{X} \in \mathbb{R}^{n}}{f(\overset{\rightarrow}{X})}\]}{\[f:\mathbb{R}^{n}\rightarrow\mathbb{R}\]}Where,
+{\(f\)} is the objective function we have discussed earlier and {\(n\)}
+is the dimension. And the simplex is a geometric figure that lives in
+that {\(n\)} dimension with {\(n + 1\)} vertices. In 2-D, it is a
+triangle, so we are going to denote it by {\(\Delta\)} for simplicity
+and convenience.
+{\[\Delta = ({\overset{\rightarrow}{x}}_{best}\ ,\ {\overset{\rightarrow}{x}}_{other}\ ,\ {\overset{\rightarrow}{x}}_{worst})\]}
+\begin{figure}[htbp]
+        \centering
+        \scalebox{1.1}{\input{./figures/init}}
+        \caption{Initial state of particle at point of time $t$ }
+        \label{fig:label}
+    \end{figure}
+
+where,
+
+\begin{itemize}
+\item
+  {\({\overset{\rightarrow}{x}}_{best}\)} is the best solution within
+  the vertices
+\item
+  {\({\overset{\rightarrow}{x}}_{worst}\)} is the worst solution within
+  the vertices
+\item
+  {\({\overset{\rightarrow}{x}}_{other}\)} is the solution in between\\
+  That is based on the fact that :\\
+  {\[f({\overset{\rightarrow}{x}}_{best}) \leq \ \ f({\overset{\rightarrow}{x}}_{other})\  \leq \ f({\overset{\rightarrow}{x}}_{worst})\]}The
+  goal now is to adjust the parameter values of the worst point so that
+  the simplex moves towards the minimum of the function with the
+  direction of moving determined by the centroid.
+\end{itemize}
+
+\section{Mathematical Model of Simplex method}
+\subsubsection{Compute Centroid}
+
+The centroid represents the geometric mean between two points. It is
+calculated for every pair of vertices in the simplex except for the
+worst point.\\
+{\[\overline{x} = \frac{1}{n}\sum\limits_{i = 1}^{n}x_{i}\]}In our case
+{\(n = 2\)}, the centroid is calculated for
+{\({\overset{\rightarrow}{x}}_{best}\)} and
+{\({\overset{\rightarrow}{x}}_{other}\)} only through the following
+simple equation:\\
+{\[\overline{x} = ({\overset{\rightarrow}{x}}_{best} + {\overset{\rightarrow}{x}}_{other})/2\]}Now,
+all the operation we are going to execute on the simplex will take place
+with respect to the direction of vector
+({\(\overline{x} - {\overset{\rightarrow}{x}}_{worst}\)}), second
+sub-figure.
+
+\begin{figure}[htp]
+\begin{subfigure}{0.5\textwidth}
+    \centering
+   \scalebox{1.1}{\input{./figures/centroid}}
+  \caption{Intial state of particles}
+  \label{fig:sub1}
+\end{subfigure}%
+\begin{subfigure}{0.5\textwidth}
+ \centering
+   \scalebox{1.1}{\input{./figures/centroid_dir}}
+  \caption{Final state of particles}
+  \label{fig:sub2}
+\end{subfigure}
+\caption{PSO Animation}
+\label{fig:test}
+\end{figure}
+\subsubsection{Reflection}
+
+Reflection is the first operation we make on the simplex data structure.
+It is an attempt to see whether the value of the function at the
+reflected point is less than the worst solution. It can be computed
+through the upcoming equation.\\
+{\[{\overset{\rightarrow}{x}}_{r} = \overline{x} + \alpha(\overline{x} - {\overset{\rightarrow}{x}}_{worst})\]}where
+{\(\alpha\)} is the reflection coefficient, positive real-valued
+parameter , typically {\(\alpha = 1\)}.
+
+    \begin{figure}[htbp]
+        \centering
+        \scalebox{1.1}{\input{./figures/reflection}}
+        \caption{Initial state of particle at point of time $t$ }
+        \label{fig:label}
+    \end{figure}
+
+
+If the objective function at the reflected point is less than the other
+point, but not the best, we set the reflected point to the worst.\\
+{\[f({\overset{\rightarrow}{x}}_{best}) \leq \ \ f({\overset{\rightarrow}{x}}_{r})\  < \ f({\overset{\rightarrow}{x}}_{other})\quad\;\Longrightarrow\;{\overset{\rightarrow}{x}}_{worst} = {\overset{\rightarrow}{x}}_{r}\]}And
+we reorder the vertices as we mentioned above; in fact, we have to
+reorder the vertices of the simplex after each operation, which is the
+whole point of the algorithm.
+
+\subsubsection{Expansion}
+
+If it happened and the reflected point is better than the best point (in
+terms of fitness)
+{\(f({\overset{\rightarrow}{x}}_{r}) < \ \ f({\overset{\rightarrow}{x}}_{best})\)}
+, maybe we can find better point a bit further from the reflected point,
+that is the idea of expansion.\\
+{\[{\overset{\rightarrow}{x}}_{e} = {\overset{\rightarrow}{x}}_{r} + \beta({\overset{\rightarrow}{x}}_{r} - \overline{x})\]}where
+{\(\beta\)} is the expansion coefficient, with {\(\beta > 1\)} ,
+typically {\(\beta = 2\)}.
+
+    \begin{figure}[htbp]
+        \centering
+        \scalebox{1.1}{\input{./figures/expansion}}
+        \caption{Initial state of particle at point of time $t$ }
+        \label{fig:label}
+    \end{figure}
+
+
+Again, we check the quality of the new point
+{\({\overset{\rightarrow}{x}}_{e}\)} , if it is better than the
+reflected point, then we are in the right direction, if not we assign
+the reflected point to the worst point normally which means, we have
+done a bad attempt .\\
+{\[f({\overset{\rightarrow}{x}}_{e}) < \ \ f({\overset{\rightarrow}{x}}_{r})\quad\;\Longrightarrow\;{\overset{\rightarrow}{x}}_{worst} = {\overset{\rightarrow}{x}}_{e}\]}{\[f({\overset{\rightarrow}{x}}_{e}) \geq \ \ f({\overset{\rightarrow}{x}}_{r})\quad\;\Longrightarrow\;{\overset{\rightarrow}{x}}_{worst} = {\overset{\rightarrow}{x}}_{r}\]}
+
+
+\subsubsection{Contraction}
+
+If the reflected is worse from the beginning, then we can minimize the
+damage by contracting the simplex whether inside or outside, whichever
+is better.
+
+
+\paragraph{Inside contraction}
+
+when the reflected point is worse than all including the worst point, we
+try to contract the simplex towards the worst point, perhaps we get a
+better solution.\\
+{\[f({\overset{\rightarrow}{x}}_{r}) \geq \ \ f({\overset{\rightarrow}{x}}_{worst})\]}{\[{\overset{\rightarrow}{x}}_{c} = \overline{x} + \gamma({\overset{\rightarrow}{x}}_{worst} - \overline{x})\]}where
+{\(\gamma\)} is the contraction coefficient, with {\(0 < \gamma < 1\)} ,
+typically {\(\gamma = \frac{1}{2}\)}.\\
+if the fitness value is better at the contracted point than the worst
+point, we replace the worst point with the contracted one, if not we
+moved in the wrong direction, maybe we have to go backwards.\\
+{\[f({\overset{\rightarrow}{x}}_{c}) < \ \ f({\overset{\rightarrow}{x}}_{worst})\quad\;\Longrightarrow\;{\overset{\rightarrow}{x}}_{worst} = {\overset{\rightarrow}{x}}_{c}\]}
+
+    \begin{figure}[htbp]
+        \centering
+        \scalebox{1.1}{\input{./figures/in_contract}}
+        \caption{Initial state of particle at point of time $t$ }
+        \label{fig:label}
+    \end{figure}
+
+
+
+\paragraph{Outside contraction}
+
+When the reflected point is, however, worse than the ``other'' point ,
+but better than the worst, we can contract in the outside direction
+(towards the reflected point).\\
+{\[f({\overset{\rightarrow}{x}}_{other}) \leq \ \ f({\overset{\rightarrow}{x}}_{r})\  < \ f({\overset{\rightarrow}{x}}_{worst})\]}{\[{\overset{\rightarrow}{x}}_{c} = \overline{x} + \gamma({\overset{\rightarrow}{x}}_{r} - \overline{x})\]}And
+we also check weather we are going to accept the new point or not.\\
+{\[f({\overset{\rightarrow}{x}}_{c}) < \ \ f({\overset{\rightarrow}{x}}_{r})\quad\;\Longrightarrow\;{\overset{\rightarrow}{x}}_{worst} = {\overset{\rightarrow}{x}}_{c}\]}
+
+    \begin{figure}[htbp]
+        \centering
+        \scalebox{1.1}{\input{./figures/out_contract}}
+        \caption{Initial state of particle at point of time $t$ }
+        \label{fig:label}
+    \end{figure}
+
+
+\paragraph{Shrinking}
+
+The idea of shrinking is to minimize the damage from a failed
+contraction, that is when
+{\(f(x_{c}) > \min\left\lbrack f(x_{worst}),f(x_{r}) \right\rbrack\)},
+This can be done by moving the worst point and the other point towards
+the best point by :\\
+{\[{\overset{\rightarrow}{x^{\ast}}}_{worst} = {\overset{\rightarrow}{x}}_{best} + \delta({\overset{\rightarrow}{x}}_{worst} - {\overset{\rightarrow}{x}}_{best})\]}{\[{\overset{\rightarrow}{x^{\ast}}}_{other} = {\overset{\rightarrow}{x}}_{best} + \delta({\overset{\rightarrow}{x}}_{other} - {\overset{\rightarrow}{x}}_{best})\]}where
+{\(\delta\)} is the contraction coefficient, with {\(0 < \delta < 1\)} ,
+traditionally {\(\delta = \frac{1}{2}\)}.
+
+    \begin{figure}[htbp]
+        \centering
+        \scalebox{1.1}{\input{./figures/shrink}}
+        \caption{Initial state of particle at point of time $t$ }
+        \label{fig:label}
+    \end{figure}
+
+
+We do all of the previous until we reach the predefined maximum
+iterations or we cannot do better by reaching certain threshold, which
+can be done by checking the convergence each iteration
+
+
+\paragraph{Convergence}
+
+We say that , the simplex has converged to the best solution if it is
+sufficiently compact meaning that the distance between the each pair of
+vertices is adequately small.\\
+{\[\sigma = 2\ .\left\lbrack \ \frac{f({\overset{\rightarrow}{x}}_{worst}) - f({\overset{\rightarrow}{x}}_{best})}{f({\overset{\rightarrow}{x}}_{worst}) + f({\overset{\rightarrow}{x}}_{best}) + \epsilon} \right\rbrack\]}where
+{\(\epsilon\)} is a tolerance defined based on the nature of the
+problem. Each iteration we check if :\\
+{\[\sigma < \epsilon\]}if not we proceed until the condition prevails.
+

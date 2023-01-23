@@ -1,0 +1,28 @@
+\begin{algorithmic}
+\State \textbf{Randomly} initialize Swarm population of $N$ particles $\vec{x}_i , 1 \le i \le N$
+\State \textbf{Select} hyperparameter values $w$, $c_1$ and $c_2$
+\For{$k \gets 1$ to $generations$}
+    \For{$ i \gets 1$ to $N$}
+        \State \textbf{a. Compute} new velocity of $i^{th}$ particle
+            \State $\vec{v_i}(t+1) = w.\vec{v_i}(t)+
+                    r_1.c_1.[\vec{P_i}(t)-\vec{x_i}(t)]+
+                    r_2.c_2.[\vec{g}(t)-\vec{x_i}(t)]$
+        \State \textbf{b. Check} new velocity bound 
+            \If{$\vec{v}_i(t+1) < \vec{v}_{min}$}
+                \State $\vec{v}_i(t+1) = \vec{v}_{min}$
+            \ElsIf{$\vec{v}_i(t+1) > \vec{v}_{max}$}
+                \State $\vec{v}_i(t+1) = \vec{v}_{max}$
+            \EndIf
+        \State \textbf{c. Update} the position of $i^{th}$ particle
+        \State $\vec{x}_i(t+1)=\vec{x}_i(t) + \vec{v}_i(t+1)$
+        \State \textbf{d. Update} new best of this particle and new best of Swarm
+        \If{$f(\vec{x}_i(t+1)) < f(\vec{P}_i(t))$}
+            \State $\vec{P}_i(t+1) = \vec{x}_i(t+1)$
+        \EndIf
+        \If{$f(\vec{P}_i(t+1)) < f(\vec{g}(t))$}
+            \State $\vec{g}(t+1) = \vec{P}_i(t+1)$
+        \EndIf
+    \EndFor
+\EndFor
+
+\end{algorithmic}
